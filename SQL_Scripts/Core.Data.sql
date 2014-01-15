@@ -14,8 +14,6 @@ replace into tenants_quota (tenant, name, description, max_file_size, max_total_
 replace into tenants_quota (tenant, name, description, max_file_size, max_total_size, active_users, features, price, price2, avangate_id, visible) values (-2, 'trial', NULL, 1024, 1048575, 400, 'trial,backup,domain,docs', 0.00, 0.00, '23', 0);
 replace into tenants_quota (tenant, name, description, max_file_size, max_total_size, active_users, features, price, price2, avangate_id, visible) values (-1, 'default', NULL, 1024, 1048575, 10000, 'backup,domain', 0.00, 0.00, NULL, 0);
 
-replace into tenants_tariff (tenant, tariff, stamp) values(0, -75, '2093-01-01');
-
 insert ignore into core_settings(tenant, id, value) values (-1, 'SmtpSettings', 0xF052E090A1A3750DADCD4E9961DA04AAF74059304D63A7395E32F788AA4732408A43879439C7045CA5A738039B4ED813D4978B53EEC54D2689FDF2AB9C1A71CBB3523A224DAC89FE455C368972B379590C3C0E53ECC55B1E7A026C822237D9894E9BF137D426F10E0C424F3E16F2A464);
 
 -- subscribe all users to what's new notifications

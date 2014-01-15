@@ -42,18 +42,21 @@ namespace ASC.Web.Studio.UserControls.FirstTime
             {
                 LogManager.GetLogger("ASC.Web").Error(error);
             }
-
+            /*
             try
             {
                 if (CoreContext.Configuration.Standalone)
                 {
-                    TenantExtra.TrialRequest();
+                    if (CoreContext.PaymentManager.GetTariff(CoreContext.TenantManager.GetCurrentTenant().TenantId).DueDate != DateTime.MaxValue)
+                    {
+                        TenantExtra.TrialRequest();
+                    }
                 }
             }
             catch (Exception error)
             {
                 LogManager.GetLogger("ASC.Web").Error(error);
-            }
+            }*/
         }
 
         public static void SetTenantData(string language)

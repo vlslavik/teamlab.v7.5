@@ -82,6 +82,8 @@ namespace ASC.Web.Studio.Masters
                 activateEmailPanel.Controls.Add(LoadControl(ActivateEmailPanel.Location));
             }
 
+            /*
+             * � community ������ ����������� �� �����
             if (!(Page is Auth || Page is Tariffs || Page is confirm || Page is Wizard || Page is ServerError || Page is Welcome))
             {
                 var curTariff = TenantExtra.GetCurrentTariff();
@@ -90,6 +92,8 @@ namespace ASC.Web.Studio.Masters
                     _contentHolder.Controls.Add(LoadControl(TariffLicenseOver.Location));
                 }
             }
+            */ 
+
             if (AffiliateHelper.BannerAvailable)
             {
                 BannerHolder.Controls.Add(LoadControl(Banner.Location));
