@@ -35,5 +35,5 @@ Documentation
 You can compile Teamlab Office Server Community Edition and install it to your local server yourself or use our installer to skip compilation stage and install it for you.
 The following documentation is available to the community depending on the way you choose:
 
-* [Compiling Teamlab Office Server Guide]https://help.teamlab.com/products/files/doceditor.aspx?fileid=3457567&doc=RjVTWndkNUxkTk1XRlBkVE9zemZQUT09PyIzNDU3NTY3Ig2 "Compiling Teamlab Office Server Guide")
-* [Teamlab Office Server Installation Guide]https://help.teamlab.com/products/files/doceditor.aspx?fileid=3457752&doc=aVc3TlhjL0lqSDhETzUzeHJNWWRlQT09PyIzNDU3NzUyIg2 "Teamlab Office Server Installation Guide")
+* [Compiling Teamlab Office Server Guide] (https://help.teamlab.com/products/files/doceditor.aspx?fileid=3457567&doc=RjVTWndkNUxkTk1XRlBkVE9zemZQUT09PyIzNDU3NTY3Ig2 "Compiling Teamlab Office Server Guide")
+* [Teamlab Office Server Installation Guide] (https://help.teamlab.com/products/files/doceditor.aspx?fileid=3457752&doc=aVc3TlhjL0lqSDhETzUzeHJNWWRlQT09PyIzNDU3NzUyIg2 "Teamlab Office Server Installation Guide")
