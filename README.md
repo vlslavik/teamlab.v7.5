@@ -16,7 +16,7 @@ It comprises all the basic TeamLab Office 7.5 functional modules sufficient for 
 * Instant Messenger
 
 All TeamLab Office 7.5 functionality without any limitations, including Online Office Apps, 
-integration with third-party services, Gantt chart, mobile apps is offered in [the Saas version](http://teamlab.com "the SaaS version")
+integration with third-party services, Gantt chart, mobile apps is offered in [the SaaS version](http://teamlab.com "the SaaS version")
 
 Project Information
 ========================
