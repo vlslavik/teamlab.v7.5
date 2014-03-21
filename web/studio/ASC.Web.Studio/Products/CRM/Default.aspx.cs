@@ -62,7 +62,7 @@ namespace ASC.Web.CRM
                 if (targetContact == null || !CRMSecurity.CanAccessTo(targetContact))
                     Response.Redirect(PathProvider.StartURL());
 
-                if (String.Compare(UrlParameters.Action, "manage", true) == 0)
+                if (String.Compare(UrlParameters.Action, "manage", true) == 0 && CRMSecurity.CanEdit(targetContact))
                     ExecContactActionView(targetContact);
                 else
                     ExecContactDetailsView(targetContact);
@@ -78,6 +78,7 @@ namespace ASC.Web.CRM
                 else
                     ExecListContactView();
             }
+
         }
 
         static public string EncodeTo64(string toEncode)

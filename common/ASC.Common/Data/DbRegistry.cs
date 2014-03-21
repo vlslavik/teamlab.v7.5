@@ -34,6 +34,7 @@ namespace ASC.Common.Data
             dialects["MySql.Data.MySqlClient.MySqlClientFactory"] = new MySQLDialect();
             dialects["Devart.Data.MySql.MySqlProviderFactory"] = new MySQLDialect();
             dialects["System.Data.SQLite.SQLiteFactory"] = new SQLiteDialect();
+            dialects["System.Data.SqlClient.SqlClientFactory"] = new SqlDialect();
         }
 
         public static void RegisterDatabase(string databaseId, DbProviderFactory providerFactory, string connectionString)
