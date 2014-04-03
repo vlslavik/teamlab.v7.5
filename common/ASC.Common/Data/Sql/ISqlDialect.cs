@@ -28,6 +28,7 @@ namespace ASC.Common.Data.Sql
 
         bool SeparateCreateIndex { get; }
 
+        bool ReplaceEnabled { get; }
 
         string DbTypeToString(DbType type, int size, int precision);
 

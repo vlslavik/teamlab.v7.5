@@ -152,7 +152,7 @@ namespace ASC.Projects.Data.DAO
             using (var db = new DbManager(DatabaseId))
             {
                 timeSpend.Date = TenantUtil.DateTimeToUtc(timeSpend.Date);
-                timeSpend.StatusChangedOn = TenantUtil.DateTimeToUtc(timeSpend.StatusChangedOn);
+                timeSpend.StatusChangedOn = TenantUtil.DateTimeToUtc(timeSpend.StatusChangedOn, DateTime.Now);
 
                 var insert = Insert(TimeTrackingTable)
                     .InColumnValue("id", timeSpend.ID)

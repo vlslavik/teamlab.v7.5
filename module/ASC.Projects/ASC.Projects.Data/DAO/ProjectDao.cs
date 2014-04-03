@@ -285,7 +285,7 @@ namespace ASC.Projects.Data.DAO
                 query.Where(Exp.Like("p.title", filter.SearchText, SqlLike.AnyWhere));
             }
 
-            query.GroupBy("p.id");
+            query.GroupBy(ProjectColumns.Select(c => "p." + c).ToArray());
 
             if (!isAdmin)
             {
@@ -526,7 +526,7 @@ namespace ASC.Projects.Data.DAO
                             TenantUtil.DateTimeToUtc(project.CreateOn),
                             project.LastModifiedBy.ToString(),
                             TenantUtil.DateTimeToUtc(project.LastModifiedOn))
-                        .InColumnValue("status_changed", project.StatusChangedOn)
+                        .InColumnValue("status_changed", TenantUtil.DateTimeToUtc(project.StatusChangedOn, DateTime.Now))
                         .Identity(1, 0, true);
                     project.ID = db.ExecuteScalar<int>(insert);
 

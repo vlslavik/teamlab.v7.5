@@ -35,6 +35,13 @@ namespace ASC.Core.Tenants
             return DateTimeFromUtc(CoreContext.TenantManager.GetCurrentTenant(), dbDateTime);
         }
 
+        public static DateTime DateTimeToUtc(DateTime dbDateTime, DateTime defaultDatetime)
+        {
+            if (DateTime.MinValue == dbDateTime)
+                dbDateTime = defaultDatetime;
+            return DateTimeToUtc(dbDateTime);
+        }
+
         public static DateTime DateTimeFromUtc(Tenant tenant, DateTime dbDateTime)
         {
             return DateTimeFromUtc(tenant.TimeZone, dbDateTime);
@@ -66,7 +73,6 @@ namespace ASC.Core.Tenants
                 return dbDateTime;
             }
             return TimeZoneInfo.ConvertTimeToUtc(DateTime.SpecifyKind(dbDateTime, DateTimeKind.Unspecified), timeZone);
-
         }
 
         public static DateTime DateTimeNow()

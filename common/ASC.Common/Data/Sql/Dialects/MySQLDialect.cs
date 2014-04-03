@@ -116,5 +116,11 @@ namespace ASC.Common.Data.Sql.Dialects
         {
             return il;
         }
+
+
+        public bool ReplaceEnabled
+        {
+            get { return true; }
+        }
     }
 }

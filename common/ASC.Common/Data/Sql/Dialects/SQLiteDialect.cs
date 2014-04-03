@@ -95,5 +95,10 @@ namespace ASC.Common.Data.Sql
             if (il <= IsolationLevel.ReadCommitted) return IsolationLevel.ReadCommitted;
             return IsolationLevel.Serializable;
         }
+        public bool ReplaceEnabled
+        {
+            get { return false; }
+        }
+
     }
 }

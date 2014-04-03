@@ -43,10 +43,85 @@ namespace ASC.Common.Data.Sql
             ReplaceExists(replaceExists);
         }
 
+        //public string ToStringOld(ISqlDialect dialect)
+        //{
+        //    var sql = new StringBuilder();
+
+        //    if (ignoreExists)
+        //    {
+        //        sql.Append(dialect.InsertIgnore);
+        //    }
+        //    else
+        //    {
+        //        sql.Append(replaceExists ? "replace" : "insert");
+        //    }
+        //    sql.AppendFormat(" into {0}", table);
+        //    bool identityInsert = IsIdentityInsert();
+        //    if (0 < columns.Count)
+        //    {
+        //        sql.Append("(");
+        //        for (int i = 0; i < columns.Count; i++)
+        //        {
+        //            if (identityInsert && identityPosition == i) continue;
+        //            sql.AppendFormat("{0},", columns[i]);
+        //        }
+        //        sql.Remove(sql.Length - 1, 1).Append(")");
+        //    }
+        //    if (query != null)
+        //    {
+        //        sql.AppendFormat(" {0}", query.ToString(dialect));
+        //        return sql.ToString();
+        //    }
+        //    sql.Append(" values (");
+        //    for (int i = 0; i < values.Count; i++)
+        //    {
+        //        if (identityInsert && identityPosition == i)
+        //        {
+        //            continue;
+        //        }
+        //        sql.Append("?");
+        //        if (i + 1 == values.Count)
+        //        {
+        //            sql.Append(")");
+        //        }
+        //        else if (0 < columns.Count && (i + 1) % columns.Count == 0)
+        //        {
+        //            sql.Append("),(");
+        //        }
+        //        else
+        //        {
+        //            sql.Append(",");
+        //        }
+        //    }
+
+        //    if (returnIdentity)
+        //    {
+        //        sql.AppendFormat("; select {0}", identityInsert ? dialect.IdentityQuery : "?");
+        //    }
+        //    return sql.ToString();
+        //}
 
         public string ToString(ISqlDialect dialect)
         {
             var sql = new StringBuilder();
+
+            if (IsUpdate() && !dialect.ReplaceEnabled)
+            {
+                sql.AppendFormat("update {0} set ", table);
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    if (identityPosition == i) continue;
+                    sql.AppendFormat("{0} = ?", columns[i]);
+                    if (i < columns.Count - 1)
+                        sql.Append(",");
+                }
+                sql.AppendFormat(" where {0}={1}", columns[identityPosition], values[identityPosition].ToString());
+                if (returnIdentity)
+                {
+                    sql.AppendFormat("; select {0}", values[identityPosition].ToString());
+                }
+                return sql.ToString();
+            }
 
             if (ignoreExists)
             {
@@ -54,7 +129,7 @@ namespace ASC.Common.Data.Sql
             }
             else
             {
-                sql.Append(replaceExists ? "replace" : "insert");
+                sql.Append(replaceExists && dialect.ReplaceEnabled ? "replace" : "insert");
             }
             sql.AppendFormat(" into {0}", table);
             bool identityInsert = IsIdentityInsert();
@@ -102,6 +177,11 @@ namespace ASC.Common.Data.Sql
             return sql.ToString();
         }
 
+        private bool IsUpdate()
+        {
+            return identityPosition >= 0 && values[identityPosition] != null && !Equals(values[identityPosition], nullValue);
+        }
+
         public object[] GetParameters()
         {
             if (query != null)
@@ -109,6 +189,13 @@ namespace ASC.Common.Data.Sql
                 return query.GetParameters();
             }
             var copy = new List<object>(values);
+
+            if (IsUpdate())
+            {
+                copy.RemoveAt(identityPosition);
+                return copy.ToArray();
+            }
+                
             if (IsIdentityInsert())
             {
                 copy.RemoveAt(identityPosition);

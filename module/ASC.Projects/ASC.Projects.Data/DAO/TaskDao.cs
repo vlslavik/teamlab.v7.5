@@ -134,7 +134,9 @@ namespace ASC.Projects.Data.DAO
         {
             var query = CreateQuery()
                 .LeftOuterJoin(MilestonesTable + " m", Exp.EqColumns("m.id", "t.milestone_id") & Exp.EqColumns("t.tenant_id", "m.tenant_id"))
-                .Select("m.title", "m.deadline");
+                .Select("m.title", "m.deadline")
+                .GroupBy("m.title", "m.deadline");
+
             
             if (filter.Max > 0 && filter.Max < 150000)
             {
@@ -301,7 +303,7 @@ namespace ASC.Projects.Data.DAO
                         .InColumnValue("milestone_id", task.Milestone)
                         .InColumnValue("sort_order", task.SortOrder)
                         .InColumnValue("deadline", task.Deadline)
-                        .InColumnValue("status_changed", task.StatusChangedOn)
+                        .InColumnValue("status_changed", TenantUtil.DateTimeToUtc(task.StatusChangedOn, DateTime.Now))
                         .InColumnValue("start_date", task.StartDate)
                         .Identity(1, 0, true);
 
@@ -467,9 +469,12 @@ namespace ASC.Projects.Data.DAO
                 .Select(ProjectDao.ProjectColumns.Select(c => "p." + c).ToArray())
                 .Select("t.id", "t.title", "t.create_by", "t.create_on", "t.last_modified_by", "t.last_modified_on")
                 .Select("t.description", "t.priority", "t.status", "t.milestone_id", "t.sort_order", "t.deadline", "t.start_date")
-                .Select("group_concat(distinct ptr.responsible_id) task_resp")
+                .Select("dbo.group_concat(distinct ptr.responsible_id) task_resp")
                 .Where("t.tenant_id", Tenant)
-                .GroupBy("t.id");
+                .GroupBy(ProjectDao.ProjectColumns.Select(c => "p." + c).ToArray())
+                .GroupBy("t.id", "t.title", "t.create_by", "t.create_on", "t.last_modified_by", "t.last_modified_on")
+                .GroupBy("t.description", "t.priority", "t.status", "t.milestone_id", "t.sort_order", "t.deadline", "t.start_date");
+             //.GroupBy("t.id");
         }
 
         private SqlQuery CreateQueryFilterBase(SqlQuery query, TaskFilter filter, bool isAdmin)

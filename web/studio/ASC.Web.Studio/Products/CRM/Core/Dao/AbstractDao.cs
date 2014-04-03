@@ -227,7 +227,7 @@ namespace ASC.CRM.Core.Dao
 
         public bool HasActivity()
         {
-            var q = new SqlExp(string.Format(@"select exists(select 1 from crm_case where tenant_id = {0}) or " +
+            var q = new SqlExp(string.Format(@"select 1 where exists(select 1 from crm_case where tenant_id = {0}) or " +
                 "exists(select 1 from crm_deal where tenant_id = {0}) or exists(select 1 from crm_task where tenant_id = {0}) or " +
                 "exists(select 1 from crm_contact where tenant_id = {0})", TenantID));
             

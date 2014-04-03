@@ -436,7 +436,7 @@ namespace ASC.CRM.Core.Dao
                 .Select("id",
                         "-1",
                         "label",
-                        "\" \"",
+                        "' '",
                         "type",
                         "sort_order",
                         "mask",

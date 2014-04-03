@@ -36,7 +36,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\_ci\deploy\STANDALONE\WebStudio\bin\</OutputPath>
+    <OutputPath>..\..\..\..\..\_ci\deploy\STANDALONE\WebStudio\Products\CRM\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -857,6 +857,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="HttpHandlers\FileHandler.ashx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\_ci\deploy\STANDALONE\WebStudio\web.connections.config">
+      <Link>web.connections.config</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">

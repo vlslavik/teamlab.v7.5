@@ -62,5 +62,10 @@ namespace ASC.Common.Data.Sql
         {
             return il;
         }
+        public bool ReplaceEnabled
+        {
+            get { return false; }
+        }
+
     }
 }

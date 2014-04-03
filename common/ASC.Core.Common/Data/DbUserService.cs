@@ -304,7 +304,7 @@ namespace ASC.Core.Data
             // (select group_concat(g.name separator ', ') from core_group g, core_usergroup r where g.tenant = u.tenant and r.tenant = u.tenant and g.id = r.groupid and r.ref_type = 0 and r.userid = u.id and g.removed = 0 and r.removed = 0)
             var department = new SqlQuery()
                 .From("core_group g", "core_usergroup r")
-                .Select("group_concat(g.name separator ', ')")
+                .Select("dbo.group_concat(g.name)")
                 .Where(Exp.EqColumns("g.tenant", "u.tenant") & Exp.EqColumns("r.tenant", "u.tenant"))
                 .Where(Exp.EqColumns("g.id", "r.groupid") & Exp.EqColumns("r.userid", "u.id"))
                 .Where("ref_type", (int)UserGroupRefType.Contains)

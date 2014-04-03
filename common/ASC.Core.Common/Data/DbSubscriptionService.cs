@@ -98,7 +98,7 @@ namespace ASC.Core.Data
                 .Select("tenant", "recipient", "sender", "action")
                 .Where(Exp.Eq("tenant", -1) | Exp.Eq("tenant", tenant))
                 .Where("source", sourceId)
-                .GroupBy("recipient", "action")
+                .GroupBy("tenant", "recipient", "sender", "action")
                 .OrderBy("tenant", true);
 
             if (recipientId != null) q.Where("recipient", recipientId);

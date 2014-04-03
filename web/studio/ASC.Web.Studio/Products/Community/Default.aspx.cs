@@ -45,7 +45,7 @@ namespace ASC.Web.Community
                 return false;
             }
 
-            var q = new SqlExp(string.Format(@"select exists(select 1 from blogs_posts where tenant = {0}) or " +
+            var q = new SqlExp(string.Format(@"select 1 where exists(select 1 from blogs_posts where tenant = {0}) or " +
                 "exists(select 1 from bookmarking_bookmark where tenant = {0}) or exists(select 1 from events_feed where tenant = {0}) or " +
                 "exists(select 1 from forum_category where tenantid = {0})", CoreContext.TenantManager.GetCurrentTenant().TenantId));
 

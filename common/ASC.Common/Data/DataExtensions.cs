@@ -221,6 +221,8 @@ namespace ASC.Common.Data
             for (var i = 0; i < sqlParts.Length - 1; i++)
             {
                 var name = "p" + i;
+                if (parameters[i] is DateTime && (DateTime)parameters[i] == DateTime.MinValue)
+                    parameters[i] = DBNull.Value;
                 command.AddParameter(name, parameters[i]);
                 sqlBuilder.AppendFormat("{0}@{1}", sqlParts[i], name);
             }
@@ -239,7 +241,9 @@ namespace ASC.Common.Data
             var value = r.GetValue(i);
             if (typeof(T) == typeof(Guid))
             {
-                value = r.GetGuid(i);
+                if (r[i] is string)
+                    value = new Guid((string)r[i]);
+                //value = r.GetGuid(i);
             }
             return (T)Convert.ChangeType(value, typeof(T));
         }

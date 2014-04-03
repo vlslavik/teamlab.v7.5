@@ -32,7 +32,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>..\..\..\_ci\deploy\STANDALONE\WebStudio\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -1837,8 +1837,8 @@
   -->
   <Target Name="AfterBuild">
     <Copy SourceFiles="@(IntermediateAssembly)" DestinationFolder="$(RedDir)" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(DocFileItem)" DestinationFiles="@(FinalDocFile-&gt;'$(RedDir)%(FileName)%(Extension)')" SkipUnchangedFiles="true" Condition="'$(_DocumentationFileProduced)'=='true'" />
-    <Copy SourceFiles="@(IntermediateSatelliteAssembliesWithTargetPath)" DestinationFiles="@(IntermediateSatelliteAssembliesWithTargetPath-&gt;'$(RedDir)%(Culture)\$(TargetName).resources.dll')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(DocFileItem)" DestinationFiles="@(FinalDocFile->'$(RedDir)%(FileName)%(Extension)')" SkipUnchangedFiles="true" Condition="'$(_DocumentationFileProduced)'=='true'" />
+    <Copy SourceFiles="@(IntermediateSatelliteAssembliesWithTargetPath)" DestinationFiles="@(IntermediateSatelliteAssembliesWithTargetPath->'$(RedDir)%(Culture)\$(TargetName).resources.dll')" SkipUnchangedFiles="true" />
     <!-- Copy api files -->
     <CreateItem Include="$(RedDir)ASC.Api.*.dll;$(RedDir)ASC.Specific.dll;$(RedDir)ASC.Feed.dll;$(RedDir)ASC.Feed.Aggregator.dll;$(RedDir)ASC.Mail.Aggregator.dll;$(RedDir)ASC.ActiveUp.Net.Common.dll;$(RedDir)ASC.ActiveUp.Net.Dns.dll;$(RedDir)ASC.ActiveUp.Net.Imap4.dll;$(RedDir)ASC.ActiveUp.Net.Mail.dll;$(RedDir)ASC.ActiveUp.Net.Pop3.dll;$(RedDir)ASC.ActiveUp.Net.Smtp.dll">
       <Output ItemName="ApiFiles" TaskParameter="Include" />

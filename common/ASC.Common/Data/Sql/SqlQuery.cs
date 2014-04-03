@@ -53,6 +53,13 @@ namespace ASC.Common.Data.Sql
             var sql = new StringBuilder();
 
             sql.Append("select ");
+
+            if (0 < maxResults && dialect is SqlDialect)
+            {
+                sql.AppendFormat(" top {0} ", maxResults);
+                //if (0 < firstResult) sql.AppendFormat(" offset {0}", firstResult);
+            }
+
             if (distinct) sql.Append("distinct ");
             if (selectAll)
             {
@@ -107,7 +114,7 @@ namespace ASC.Common.Data.Sql
                 sql.Remove(sql.Length - 2, 2);
             }
 
-            if (0 < maxResults)
+            if (0 < maxResults && !(dialect is SqlDialect))
             {
                 sql.AppendFormat(" limit {0}", maxResults);
                 if (0 < firstResult) sql.AppendFormat(" offset {0}", firstResult);

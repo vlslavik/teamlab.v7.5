@@ -28,7 +28,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\_ci\deploy\STANDALONE\WebStudio\Products\Projects\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -47,11 +47,6 @@
     <Reference Include="ASC.Common">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\redistributable\asc\ASC.Common.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="ASC.Core.Common">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\redistributable\asc\ASC.Core.Common.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ASC.Feed, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -102,6 +97,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\common\ASC.Core.Common\ASC.Core.Common.csproj">
+      <Project>{a51d0454-4afa-46de-89d4-b03d37e1816c}</Project>
+      <Name>ASC.Core.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ASC.Projects.Core\ASC.Projects.Core.csproj">
       <Project>{98330417-CF62-4624-94DC-271433945E27}</Project>
       <Name>ASC.Projects.Core</Name>

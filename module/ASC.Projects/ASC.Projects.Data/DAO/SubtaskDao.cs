@@ -160,7 +160,7 @@ namespace ASC.Projects.Data.DAO
                         .InColumnValue("create_on", TenantUtil.DateTimeToUtc(subtask.CreateOn))
                         .InColumnValue("last_modified_by", subtask.LastModifiedBy.ToString())
                         .InColumnValue("last_modified_on", TenantUtil.DateTimeToUtc(subtask.LastModifiedOn))
-                        .InColumnValue("status_changed", TenantUtil.DateTimeToUtc(subtask.StatusChangedOn))
+                        .InColumnValue("status_changed", TenantUtil.DateTimeToUtc(subtask.StatusChangedOn, DateTime.Now))
                         .Identity(1, 0, true);
 
                     subtask.ID = db.ExecuteScalar<int>(insert);
