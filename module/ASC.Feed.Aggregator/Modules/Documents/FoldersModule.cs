@@ -103,13 +103,13 @@ namespace ASC.Feed.Aggregator.Modules.Documents
             var q1 = new SqlQuery("files_folder")
                 .Select("tenant_id")
                 .Where(Exp.Gt("modified_on", fromTime))
-                .GroupBy(1)
+                .GroupBy("tenant_id")
                 .Having(Exp.Gt("count(*)", 0));
 
             var q2 = new SqlQuery("files_security")
                 .Select("tenant_id")
                 .Where(Exp.Gt("timestamp", fromTime))
-                .GroupBy(1)
+                .GroupBy("tenant_id")
                 .Having(Exp.Gt("count(*)", 0));
 
             using (var db = new DbManager(DbId))

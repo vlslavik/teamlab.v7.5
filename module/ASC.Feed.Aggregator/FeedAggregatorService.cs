@@ -104,109 +104,115 @@ namespace ASC.Feed.Aggregator
         private void AggregateFeeds(object interval)
         {
             if (!Monitor.TryEnter(aggregateLock)) return;
-
             try
-            {
+            { 
                 var start = DateTime.UtcNow;
                 log.DebugFormat("Start of collecting feeds...");
 
                 foreach (var module in Modules)
                 {
-                    var result = new List<FeedRow>();
-                    var fromTime = FeedAggregateDataProvider.GetLastTimeAggregate(module.GetType().Name);
-                    if (fromTime == default(DateTime)) fromTime = DateTime.UtcNow.Subtract((TimeSpan)interval);
-                    var toTime = DateTime.UtcNow;
-
-                    var tenants = Attempt(10, () => module.GetTenantsWithFeeds(fromTime)).ToList();
-                    log.DebugFormat("Find {1} tenants for module {0}.", module.GetType().Name, tenants.Count());
-
-                    foreach (var tenant in tenants)
+                    try
                     {
-                        // Warning! There is hack here!
-                        // clearing the cache to get the correct acl
-                        var aspCache = new AspCache();
-                        aspCache.Remove("acl" + tenant);
-                        aspCache.Remove("/webitemsecurity/" + tenant);
-                        aspCache.Remove(string.Format("sub/{0}/{1}/{2}", tenant, "6045b68c-2c2e-42db-9e53-c272e814c4ad", NotifyConstants.Event_NewCommentForMessage.ID));
+                        var result = new List<FeedRow>();
+                        var fromTime = FeedAggregateDataProvider.GetLastTimeAggregate(module.GetType().Name);
+                        if (fromTime == default(DateTime)) fromTime = DateTime.UtcNow.Subtract((TimeSpan)interval);
+                        var toTime = DateTime.UtcNow;
 
-                        HttpContext.Current = null;
-                        try
+                        var tenants = Attempt(10, () => module.GetTenantsWithFeeds(fromTime)).ToList();
+                        log.DebugFormat("Find {1} tenants for module {0}.", module.GetType().Name, tenants.Count());
+
+                        foreach (var tenant in tenants)
                         {
-                            if (CoreContext.TenantManager.GetTenant(tenant) == null)
+                            // Warning! There is hack here!
+                            // clearing the cache to get the correct acl
+                            var aspCache = new AspCache();
+                            aspCache.Remove("acl" + tenant);
+                            aspCache.Remove("/webitemsecurity/" + tenant);
+                            aspCache.Remove(string.Format("sub/{0}/{1}/{2}", tenant, "6045b68c-2c2e-42db-9e53-c272e814c4ad", NotifyConstants.Event_NewCommentForMessage.ID));
+
+                            HttpContext.Current = null;
+                            try
                             {
-                                continue;
-                            }
-
-                            CoreContext.TenantManager.SetCurrentTenant(tenant);
-                            HttpContext.Current = new HttpContext(
-                                new HttpRequest("hack", CommonLinkUtility.GetFullAbsolutePath("/"), string.Empty),
-                                new HttpResponse(new StringWriter()));
-
-                            var feeds = Attempt(10, () => module.GetFeeds(new FeedFilter(fromTime, toTime) {Tenant = tenant}));
-                            log.DebugFormat("{0} feeds in {1} tenant.", feeds.Count(), tenant);
-                            foreach (var tuple in feeds)
-                            {
-                                if (tuple.Item1 == null) continue;
-
-                                var r = new FeedRow
-                                    {
-                                        Id = tuple.Item1.Id,
-                                        ClearRightsBeforeInsert = tuple.Item1.Variate,
-                                        Tenant = tenant,
-                                        ProductId = module.Product,
-                                        ModuleId = tuple.Item1.Module,
-                                        AuthorId = tuple.Item1.LastModifiedBy,
-                                        CreatedDate = tuple.Item1.Date,
-                                        GroupId = tuple.Item1.GroupId,
-                                        Json = JsonConvert.SerializeObject(tuple.Item1, new JsonSerializerSettings
-                                            {
-                                                DateTimeZoneHandling = DateTimeZoneHandling.Utc
-                                            }),
-                                        Keywords = tuple.Item1.Keywords
-                                    };
-
-                                foreach (var u in CoreContext.UserManager.GetUsers())
+                                if (CoreContext.TenantManager.GetTenant(tenant) == null)
                                 {
-                                    if (isStopped)
-                                    {
-                                        return;
-                                    }
-                                    if (TryAuthenticate(u.ID) && module.VisibleFor(tuple.Item1, tuple.Item2, u.ID))
-                                    {
-                                        r.Users.Add(u.ID);
-                                    }
+                                    continue;
                                 }
 
-                                result.Add(r);
+                                CoreContext.TenantManager.SetCurrentTenant(tenant);
+                                HttpContext.Current = new HttpContext(
+                                    new HttpRequest("hack", CommonLinkUtility.GetFullAbsolutePath("/"), string.Empty),
+                                    new HttpResponse(new StringWriter()));
+
+                                var feeds = Attempt(10, () => module.GetFeeds(new FeedFilter(fromTime, toTime) { Tenant = tenant }));
+                                log.DebugFormat("{0} feeds in {1} tenant.", feeds.Count(), tenant);
+                                foreach (var tuple in feeds)
+                                {
+                                    if (tuple.Item1 == null) continue;
+
+                                    var r = new FeedRow
+                                        {
+                                            Id = tuple.Item1.Id,
+                                            ClearRightsBeforeInsert = tuple.Item1.Variate,
+                                            Tenant = tenant,
+                                            ProductId = module.Product,
+                                            ModuleId = tuple.Item1.Module,
+                                            AuthorId = tuple.Item1.LastModifiedBy,
+                                            CreatedDate = tuple.Item1.Date,
+                                            GroupId = tuple.Item1.GroupId,
+                                            Json = JsonConvert.SerializeObject(tuple.Item1, new JsonSerializerSettings
+                                                {
+                                                    DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                                                }),
+                                            Keywords = tuple.Item1.Keywords
+                                        };
+
+                                    foreach (var u in CoreContext.UserManager.GetUsers())
+                                    {
+                                        if (isStopped)
+                                        {
+                                            return;
+                                        }
+                                        if (TryAuthenticate(u.ID) && module.VisibleFor(tuple.Item1, tuple.Item2, u.ID))
+                                        {
+                                            r.Users.Add(u.ID);
+                                        }
+                                    }
+
+                                    result.Add(r);
+                                }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            log.ErrorFormat("Tenant: {0}, {1}", tenant, ex);
-                        }
-                        finally
-                        {
-                            if (HttpContext.Current != null)
+                            catch (Exception ex)
                             {
-                                new DisposableHttpContext(HttpContext.Current).Dispose();
-                                HttpContext.Current = null;
+                                log.ErrorFormat("Tenant: {0}, {1}", tenant, ex);
+                            }
+                            finally
+                            {
+                                if (HttpContext.Current != null)
+                                {
+                                    new DisposableHttpContext(HttpContext.Current).Dispose();
+                                    HttpContext.Current = null;
+                                }
                             }
                         }
+
+                        FeedAggregateDataProvider.SaveFeeds(result, module.GetType().Name, toTime);
+
+                        log.DebugFormat("Time of collecting news: {0}", DateTime.UtcNow - start);
                     }
-
-                    FeedAggregateDataProvider.SaveFeeds(result, module.GetType().Name, toTime);
+                    catch (Exception ex)
+                    {
+                        log.Error(ex);
+                    }
+                    finally
+                    {
+                    }
                 }
-
-                log.DebugFormat("Time of collecting news: {0}", DateTime.UtcNow - start);
             }
             catch (Exception ex)
             {
-                log.Error(ex);
+                log.ErrorFormat("Tenant: {0}, {1}", 0, ex);
             }
-            finally
-            {
-                Monitor.Exit(aggregateLock);
-            }
+            Monitor.Exit(aggregateLock);
         }
 
         private void RemoveFeeds(object interval)

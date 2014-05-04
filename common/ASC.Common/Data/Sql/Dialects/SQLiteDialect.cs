@@ -13,6 +13,7 @@
 
 using System;
 using System.Data;
+using System.Linq;
 
 namespace ASC.Common.Data.Sql
 {
@@ -99,6 +100,9 @@ namespace ASC.Common.Data.Sql
         {
             get { return false; }
         }
-
+        public System.Collections.Generic.List<string> GetPrimaryKeyColumns(string tablename)
+        {
+            return null;
+        }
     }
 }

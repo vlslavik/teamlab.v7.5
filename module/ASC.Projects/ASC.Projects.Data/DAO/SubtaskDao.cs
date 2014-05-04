@@ -148,7 +148,7 @@ namespace ASC.Projects.Data.DAO
         {
             using (var db = new DbManager(DatabaseId))
             {
-                using (var tr = db.Connection.BeginTransaction())
+                using (var tr = db.BeginTransaction())
                 {
                     var insert = Insert(SubtasksTable)
                         .InColumnValue("id", subtask.ID)

@@ -861,6 +861,7 @@
   <ItemGroup>
     <None Include="..\..\..\..\..\_ci\deploy\STANDALONE\WebStudio\web.connections.config">
       <Link>web.connections.config</Link>
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

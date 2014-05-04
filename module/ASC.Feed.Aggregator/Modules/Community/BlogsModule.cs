@@ -70,13 +70,13 @@ namespace ASC.Feed.Aggregator.Modules.Community
             var q1 = new SqlQuery("blogs_posts")
                 .Select("tenant")
                 .Where(Exp.Gt("created_when", fromTime))
-                .GroupBy(1)
+                .GroupBy("tenant")
                 .Having(Exp.Gt("count(*)", 0));
 
             var q2 = new SqlQuery("blogs_comments")
                 .Select("tenant")
                 .Where(Exp.Gt("created_when", fromTime))
-                .GroupBy(1)
+                .GroupBy("tenant")
                 .Having(Exp.Gt("count(*)", 0));
 
             using (var db = new DbManager(DbId))

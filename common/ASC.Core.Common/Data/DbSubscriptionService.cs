@@ -62,15 +62,17 @@ namespace ASC.Core.Data
         public void SaveSubscription(SubscriptionRecord s)
         {
             if (s == null) throw new ArgumentNullException("s");
-
-            var i = Insert("core_subscription", s.Tenant)
+            if (GetSubscription(s.Tenant, s.SourceId, s.ActionId, s.RecipientId, s.ObjectId) == null)
+            {
+                var i = Insert("core_subscription", s.Tenant)
                 .InColumnValue("source", s.SourceId)
                 .InColumnValue("action", s.ActionId)
                 .InColumnValue("recipient", s.RecipientId)
                 .InColumnValue("object", s.ObjectId ?? string.Empty)
                 .InColumnValue("unsubscribed", !s.Subscribed);
 
-            ExecNonQuery(i);
+                ExecNonQuery(i);
+            }
         }
 
         public void RemoveSubscriptions(int tenant, string sourceId, string actionId)

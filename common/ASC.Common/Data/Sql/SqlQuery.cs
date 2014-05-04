@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using ASC.Common.Data.Sql.Expressions;
+using System.Linq;
 
 namespace ASC.Common.Data.Sql
 {
@@ -308,6 +309,35 @@ namespace ASC.Common.Data.Sql
         {
             orders.Add(positin, asc);
             return this;
+        }
+
+        public void CheckGroups()
+        {
+            if (groups.Count == 0)
+                return;
+            var cx = columns.Where(i => i is SqlIdentifier).Select(i => ((SqlIdentifier)i).Identifier).Where(n => n[1] == '.').Distinct().ToList();
+            if (cx.Count > groups.Count)
+            {
+                groups.Clear();
+                groups.AddRange(cx);
+            }
+            var smazat = new List<object>();
+            foreach (var o in orders.Keys)
+            if (o is string)
+            {
+                var id = (string)o;
+                foreach(var g in groups)
+                    if (g is string && (id.Equals(g)))
+                    {
+                        id = null;
+                        break;
+                    }
+                if (id != null)
+                    smazat.Add(o);
+            }
+
+            foreach (var s in smazat)
+                orders.Remove(s);
         }
 
         public SqlQuery GroupBy(params string[] columns)

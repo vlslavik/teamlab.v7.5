@@ -60,7 +60,7 @@ namespace ASC.Feed.Aggregator.Modules
             var q = new SqlQuery(Table)
                 .Select(TenantColumn)
                 .Where(Exp.Gt(LastUpdatedColumn, fromTime))
-                .GroupBy(1)
+                .GroupBy(TenantColumn)
                 .Having(Exp.Gt("count(*)", 0));
 
             using (var db = new DbManager(DbId))

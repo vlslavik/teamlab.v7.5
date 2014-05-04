@@ -73,14 +73,14 @@ namespace ASC.Feed.Aggregator.Modules.Projects
             var q1 = new SqlQuery("projects_messages")
                 .Select("tenant_id")
                 .Where(Exp.Gt("create_on", fromTime))
-                .GroupBy(1)
+                .GroupBy("tenant_id")
                 .Having(Exp.Gt("count(*)", 0));
 
             var q2 = new SqlQuery("projects_comments")
                 .Select("tenant_id")
                 .Where("substring_index(target_uniq_id, '_', 1) = 'Message'")
                 .Where(Exp.Gt("create_on", fromTime))
-                .GroupBy(1)
+                .GroupBy("tenant_id")
                 .Having(Exp.Gt("count(*)", 0));
 
             using (var db = new DbManager(DbId))

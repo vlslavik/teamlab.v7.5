@@ -13,6 +13,7 @@
 
 using System;
 using System.Data;
+using System.Linq;
 
 namespace ASC.Common.Data.Sql.Dialects
 {
@@ -121,6 +122,13 @@ namespace ASC.Common.Data.Sql.Dialects
         public bool ReplaceEnabled
         {
             get { return true; }
+        }
+
+
+
+        public System.Collections.Generic.List<string> GetPrimaryKeyColumns(string tablename)
+        {
+            return null;
         }
     }
 }

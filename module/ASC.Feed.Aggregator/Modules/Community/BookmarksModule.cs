@@ -72,13 +72,13 @@ namespace ASC.Feed.Aggregator.Modules.Community
             var q1 = new SqlQuery("bookmarking_bookmark")
                 .Select("tenant")
                 .Where(Exp.Gt("date", fromTime))
-                .GroupBy(1)
+                .GroupBy("tenant")
                 .Having(Exp.Gt("count(*)", 0));
 
             var q2 = new SqlQuery("bookmarking_comment")
                 .Select("tenant")
                 .Where(Exp.Gt("datetime", fromTime))
-                .GroupBy(1)
+                .GroupBy("tenant")
                 .Having(Exp.Gt("count(*)", 0));
 
             using (var db = new DbManager(DbId))

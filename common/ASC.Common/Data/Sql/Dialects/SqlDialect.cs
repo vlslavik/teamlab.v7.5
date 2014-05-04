@@ -11,7 +11,9 @@
  * 
  */
 
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 
 namespace ASC.Common.Data.Sql
@@ -39,7 +41,7 @@ namespace ASC.Common.Data.Sql
 
         public virtual bool SupportMultiTableUpdate
         {
-            get { return true; }
+            get { return false; }
         }
 
         public virtual bool SeparateCreateIndex
@@ -64,8 +66,44 @@ namespace ASC.Common.Data.Sql
         }
         public bool ReplaceEnabled
         {
-            get { return false; }
+            get { return true; }
         }
 
+        private static SortedDictionary<string, List<string>> keys = new SortedDictionary<string, List<string>>();
+
+        public List<string> GetPrimaryKeyColumns(string tablename)
+        {
+            List<string> ret;
+            if (keys.TryGetValue(tablename.ToLower(), out ret))
+                return ret;
+            else
+                return null;
+        }
+
+        private static SortedDictionary<string, List<string>> LoadKeys(DbManager dbManager)
+        {
+            var x = new SortedDictionary<string, List<string>>();
+            var ret = dbManager.ExecuteList("SELECT lower(table_name), lower(column_name) FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE OBJECTPROPERTY(OBJECT_ID(constraint_name), 'IsPrimaryKey') = 1");
+            foreach (var r in ret)
+            {
+                if (!x.ContainsKey((string)r[0]))
+                    x.Add((string)r[0], new List<string>());
+                x[(string)r[0]].Add((string)r[1]);
+            }
+
+            return x;
+        }
+
+        internal static void CheckKeys(DbManager dbManager)
+        {
+            if (keys.Count == 0)
+                lock (keys)
+                {
+                    if (keys.Count == 0)
+                    {
+                        keys = LoadKeys(dbManager);
+                    }
+                }
+        }
     }
 }

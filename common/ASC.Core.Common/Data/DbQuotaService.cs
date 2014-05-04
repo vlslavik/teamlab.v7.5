@@ -98,15 +98,31 @@ namespace ASC.Core.Data
 
             ExecAction(db =>
             {
-                var counter = db.ExecScalar<long>(Query(tenants_quotarow, row.Tenant)
+                var counter = db.ExecScalar<long?>(Query(tenants_quotarow, row.Tenant)
                     .Select("counter")
                     .Where("path", row.Path));
 
-                db.ExecNonQuery(Insert(tenants_quotarow, row.Tenant)
+                if (counter.HasValue)
+                {
+                    db.ExecNonQuery(Update(tenants_quotarow, row.Tenant)
+                        .Set("counter", exchange ? counter.Value + row.Counter : row.Counter)
+                        .Set("last_modified", DateTime.UtcNow)
+                        .Where(Exp.Eq("path", row.Path)));
+                    //db.ExecNonQuery(Insert(tenants_quotarow, row.Tenant)
+                    //    .InColumnValue("path", row.Path)
+                    //    .InColumnValue("counter", exchange ? counter.Value + row.Counter : row.Counter)
+                    //    .InColumnValue("tag", row.Tag)
+                    //    .InColumnValue("last_modified", DateTime.UtcNow));
+                }
+                else
+                {
+                    //ok
+                    db.ExecNonQuery(Insert(tenants_quotarow, row.Tenant)
                     .InColumnValue("path", row.Path)
-                    .InColumnValue("counter", exchange ? counter + row.Counter : row.Counter)
+                    .InColumnValue("counter", row.Counter)
                     .InColumnValue("tag", row.Tag)
                     .InColumnValue("last_modified", DateTime.UtcNow));
+                }
             });
         }
 

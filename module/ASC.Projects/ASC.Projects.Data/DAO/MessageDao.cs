@@ -227,7 +227,8 @@ namespace ASC.Projects.Data.DAO
                 .Select(ProjectDao.ProjectColumns.Select(c => "p." + c).ToArray())
                 .Select("t.id", "t.title", "t.create_by", "t.create_on", "t.last_modified_by", "t.last_modified_on", "t.content")
                 .Select("max(coalesce(pc.create_on, t.create_on)) comments")
-                .GroupBy("t.id")
+                .GroupBy(ProjectDao.ProjectColumns.Select(c => "p." + c).ToArray())
+                .GroupBy("t.id", "t.title", "t.create_by", "t.create_on", "t.last_modified_by", "t.last_modified_on", "t.content")
                 .Where("t.tenant_id", Tenant);
         }
 

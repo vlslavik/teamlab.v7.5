@@ -156,7 +156,7 @@ namespace ASC.Files.Core.Data
         {
             return Query("files_folder d")
                 .From("files_folder_tree t")
-                .Select("concat(cast(d.folder_type as char),d.create_by,cast(d.id as char))")
+                .Select("concat(cast(d.folder_type as varchar),d.create_by,cast(d.id as varchar))")
                 .Where(Exp.EqColumns("d.id", "t.parent_id") &
                        Exp.EqColumns("t.folder_id", "f." + parentFolderColumnName))
                 .OrderBy("level", false)

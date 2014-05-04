@@ -94,7 +94,7 @@ namespace ASC.Projects.Data.DAO
                         .Select("target_uniq_id", "count(*)")
                         .Where(Exp.In("target_uniq_id", targets.ConvertAll(target => target.UniqID)))
                         .Where("inactive", false)
-                        .GroupBy(1)
+                        .GroupBy("target_uniq_id")
                     ).ConvertAll(r => new object[] { Convert.ToString(r[0]), Convert.ToInt32(r[1]) });
 
                 return targets.ConvertAll(

@@ -238,7 +238,7 @@ namespace ASC.Feed.Data
                 var q = new SqlQuery("feed_aggregate")
                     .Select("tenant")
                     .Where(Exp.Between("aggregated_date", interval.From, interval.To))
-                    .GroupBy(1);
+                    .GroupBy("tenant");
                 return db.ExecuteList(q).ConvertAll(r => Convert.ToInt32(r[0]));
             }
         }

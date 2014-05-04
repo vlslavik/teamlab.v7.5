@@ -11,6 +11,8 @@
  * 
  */
 
+using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 
 namespace ASC.Common.Data.Sql
@@ -33,5 +35,7 @@ namespace ASC.Common.Data.Sql
         string DbTypeToString(DbType type, int size, int precision);
 
         IsolationLevel GetSupportedIsolationLevel(IsolationLevel il);
+
+        List<string> GetPrimaryKeyColumns(string tablename);
     }
 }

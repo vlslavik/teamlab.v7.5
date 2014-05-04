@@ -55,8 +55,13 @@ namespace ASC.Core.Billing
         }
 
 
-        public Tariff GetTariff(int tenantId, bool withRequestToPaymentSystem = true)
+        public Tariff GetTariff(int tenantId, bool withRequestToPaymentSystem = false)
         {
+            var ret = Tariff.CreateDefault();
+            ret.Autorenewal = true;
+            ret.DueDate = new DateTime(2100, 12, 31);
+            ret.State = TariffState.Paid;
+            return ret;
             var key = "tariff/" + tenantId;
             var tariff = cache.Get(key) as Tariff;
             if (tariff == null)

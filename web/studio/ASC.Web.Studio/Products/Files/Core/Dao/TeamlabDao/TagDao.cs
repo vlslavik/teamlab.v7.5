@@ -294,7 +294,8 @@ namespace ASC.Files.Core.Data
 	                                PRIMARY KEY (`tenant_id`, `entry_id`, `entry_type`)
                                 );";
 
-                    DbManager.ExecuteNonQuery(sqlQueryStr);
+                    //Table exists
+                    //DbManager.ExecuteNonQuery(sqlQueryStr);
 
                     foreach (var fileEntrie in fileEntries)
                         DbManager.ExecuteNonQuery(

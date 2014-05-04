@@ -132,7 +132,7 @@ namespace ASC.Projects.Data.DAO
                 .Where("p.tenant_id", Tenant)
                 .Where("p.status", ProjectStatus.Open)
                 .OrderBy("p.title", true)
-                .GroupBy("p.id");
+                .GroupBy(ProjectColumns.Select(c => "p." + c).ToArray());
 
             if (!participantId.Equals(Guid.Empty))
             {

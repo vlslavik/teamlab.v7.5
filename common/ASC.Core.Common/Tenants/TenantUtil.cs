@@ -37,7 +37,7 @@ namespace ASC.Core.Tenants
 
         public static DateTime DateTimeToUtc(DateTime dbDateTime, DateTime defaultDatetime)
         {
-            if (DateTime.MinValue == dbDateTime)
+            if (dbDateTime.Year < 2000)
                 dbDateTime = defaultDatetime;
             return DateTimeToUtc(dbDateTime);
         }

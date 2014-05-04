@@ -68,13 +68,13 @@ namespace ASC.Feed.Aggregator.Modules.Community
             var q1 = new SqlQuery("forum_topic")
                 .Select("tenantId")
                 .Where(Exp.Gt("create_date", fromTime))
-                .GroupBy(1)
+                .GroupBy("tenant")
                 .Having(Exp.Gt("count(*)", 0));
 
             var q2 = new SqlQuery("forum_post")
                 .Select("tenantId")
                 .Where(Exp.Gt("create_date", fromTime))
-                .GroupBy(1)
+                .GroupBy("tenant")
                 .Having(Exp.Gt("count(*)", 0));
 
             using (var db = new DbManager(DbId))

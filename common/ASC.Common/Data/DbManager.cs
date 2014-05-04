@@ -79,6 +79,8 @@ namespace ASC.Common.Data
             {
                 proxyContext = new ProxyContext(AdoProxyExecutedEventHandler);
             }
+
+            Sql.SqlDialect.CheckKeys(this);
         }
 
         #region IDisposable Members
@@ -192,7 +194,16 @@ namespace ASC.Common.Data
 
         public List<object[]> ExecuteList(ISqlInstruction sql)
         {
-            return Command.ExecuteList(sql, GetDialect());
+            try
+            {
+                if (sql is SqlQuery)
+                    ((SqlQuery)sql).CheckGroups();
+                return Command.ExecuteList(sql, GetDialect());
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
 
         public List<T> ExecuteList<T>(ISqlInstruction sql, Converter<IDataRecord, T> converter)
